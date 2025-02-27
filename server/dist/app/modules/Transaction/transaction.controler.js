@@ -17,6 +17,16 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const transaction_service_1 = require("./transaction.service");
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
+const getMyTransactions = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.user;
+    const transactions = yield transaction_service_1.TransactionServices.getMyTransactions(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'My transactions',
+        data: transactions,
+    });
+}));
 const sendMoney = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { senderId, receiverPhone, amount, pin } = req.body;
     const result = yield transaction_service_1.TransactionServices.sendMoney(senderId, receiverPhone, amount, pin);
@@ -51,4 +61,5 @@ exports.TransactionControllers = {
     sendMoney,
     cashOut,
     cashIn,
+    getMyTransactions,
 };

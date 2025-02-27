@@ -132,8 +132,13 @@ const cashIn = (userId, agentId, amount, pin) => __awaiter(void 0, void 0, void 
     });
     return transaction;
 });
+const getMyTransactions = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const transactions = yield transaction_model_1.Transaction.find({ senderId: userId, receiverId: userId });
+    return transactions;
+});
 exports.TransactionServices = {
     sendMoney,
     cashOut,
     cashIn,
+    getMyTransactions,
 };

@@ -12,4 +12,5 @@ const router = express_1.default.Router();
 router.post('/send-money', (0, auth_1.default)(user_constant_1.USER_ROLE.user, user_constant_1.USER_ROLE.agent, user_constant_1.USER_ROLE.admin), transaction_controler_1.TransactionControllers.sendMoney);
 router.post('/cash-out', (0, auth_1.default)(user_constant_1.USER_ROLE.user, user_constant_1.USER_ROLE.agent, user_constant_1.USER_ROLE.admin), transaction_controler_1.TransactionControllers.cashOut);
 router.post('/cash-in', (0, auth_1.default)(user_constant_1.USER_ROLE.agent, user_constant_1.USER_ROLE.admin), transaction_controler_1.TransactionControllers.cashIn);
+router.get('/my-transactions', (0, auth_1.default)(user_constant_1.USER_ROLE.user, user_constant_1.USER_ROLE.agent, user_constant_1.USER_ROLE.admin), transaction_controler_1.TransactionControllers.getMyTransactions);
 exports.TransactionRoutes = router;

@@ -29,8 +29,8 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const user_constant_1 = require("./user.constant");
-const getMe = (userId, role) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findOne({ _id: userId, role: role }).select('+password');
+const getMe = (userId, role, nid) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.User.findOne({ _id: userId, role: role, nid: nid }).select('+password');
     return result;
 });
 const changeStatus = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {

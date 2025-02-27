@@ -18,8 +18,8 @@ const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const user_service_1 = require("./user.service");
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId, role } = req.user;
-    const result = yield user_service_1.UserServices.getMe(userId, role);
+    const { _id, role, nid } = req.user;
+    const result = yield user_service_1.UserServices.getMe(_id, role, nid);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

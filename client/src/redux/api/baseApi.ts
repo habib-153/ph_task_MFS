@@ -11,7 +11,7 @@ import { logout, setUser } from "../features/auth/authSlice";
 import { toast } from "sonner";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api/v1",
+  baseUrl: "https://mfs-server-orcin.vercel.app/api/v1",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
@@ -42,7 +42,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
     console.log("Sending refresh token");
 
     const res = await fetch(
-      "http://localhost:5000/api/v1/auth/refresh-token",
+      "https://mfs-server-orcin.vercel.app/api/v1/auth/refresh-token",
       {
         method: "POST",
         credentials: "include",

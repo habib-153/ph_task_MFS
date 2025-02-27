@@ -57,7 +57,6 @@ console.log(user)
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
       }}
     >
-      {/* App Logo/Name */}
       <div
         style={{
           padding: "16px",
@@ -70,7 +69,7 @@ console.log(user)
         }}
       >
         <Title level={3} style={{ color: "white", margin: 0 }}>
-          JPL
+          MFS
         </Title>
         <div style={{ fontSize: "12px", color: "#9ca3af" }}>
           Money Transfer Service
