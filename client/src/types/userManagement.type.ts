@@ -4,9 +4,9 @@ export type TUser = {
   email: string;
   fullName?: string
   name: TName
-  needsPasswordChange: boolean;
+  needsPasswordChange?: boolean;
   role: string;
-  status: string;
+  status?: string;
   isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;

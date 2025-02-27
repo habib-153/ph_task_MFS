@@ -6,8 +6,8 @@ import httpStatus from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { UserSearchableFields } from './user.constant';
 
-const getMe = async (userId: string, role: string) => {
-  const result = await User.findOne({ _id: userId, role: role }).select('+password');
+const getMe = async (userId: string, role: string, nid: string) => {
+  const result = await User.findOne({ _id: userId, role: role, nid: nid }).select('+password');
 
   return result;
 };

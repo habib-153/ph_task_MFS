@@ -61,7 +61,6 @@ const registerUser = async (payload: Partial<TUser>, image: TImageFile) => {
 };
 
 const loginUser = async (payload: TLoginUser) => {
-  console.log(payload);
   // checking if the user is exist
   const user = await User.isUserExistsByEmail(payload?.email);
 

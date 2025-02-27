@@ -4,9 +4,9 @@ import { UserServices } from './user.service';
 import catchAsync from '../../utils/catchAsync';
 
 const getMe = catchAsync(async (req, res) => {
-  const { userId, role } = req.user;
+  const { _id, role, nid } = req.user;
 
-  const result = await UserServices.getMe(userId, role);
+  const result = await UserServices.getMe(_id, role, nid);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
