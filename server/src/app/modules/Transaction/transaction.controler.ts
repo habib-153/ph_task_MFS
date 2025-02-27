@@ -5,11 +5,12 @@ import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 
 const sendMoney = catchAsync(async (req: Request, res: Response) => {
-  const { senderId, receiverPhone, amount } = req.body;
+  const { senderId, receiverPhone, amount, pin } = req.body;
   const result = await TransactionServices.sendMoney(
     senderId,
     receiverPhone,
     amount,
+    pin
   );
 
   sendResponse(res, {
@@ -21,8 +22,8 @@ const sendMoney = catchAsync(async (req: Request, res: Response) => {
 });
 
 const cashOut = catchAsync(async (req: Request, res: Response) => {
-  const { userId, agentId, amount } = req.body;
-  const result = await TransactionServices.cashOut(userId, agentId, amount);
+  const { userId, agentId, amount, pin } = req.body;
+  const result = await TransactionServices.cashOut(userId, agentId, amount, pin);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -33,8 +34,8 @@ const cashOut = catchAsync(async (req: Request, res: Response) => {
 });
 
 const cashIn = catchAsync(async (req: Request, res: Response) => {
-  const { userId, agentId, amount } = req.body;
-  const result = await TransactionServices.cashIn(userId, agentId, amount);
+  const { userId, agentId, amount, pin } = req.body;
+  const result = await TransactionServices.cashIn(userId, agentId, amount, pin);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

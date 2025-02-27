@@ -8,10 +8,14 @@ const sendMoney = async (
   senderId: string,
   receiverPhone: string,
   amount: number,
+  pin: string,
 ) => {
   const sender = await User.findById(senderId);
   const receiver = await User.findOne({ phoneNumber: receiverPhone });
-  const admin = await User.findOne({ role: 'admin' , phoneNumber: config.ADMIN_PHONE});
+  const admin = await User.findOne({
+    role: 'admin',
+    phoneNumber: config.ADMIN_PHONE,
+  });
 
   if (!sender) {
     throw new AppError(httpStatus.NOT_FOUND, 'Sender not found');
@@ -22,6 +26,9 @@ const sendMoney = async (
   if (!admin) {
     throw new AppError(httpStatus.NOT_FOUND, 'Admin not found');
   }
+
+  if (!(await User.isPasswordMatched(pin, sender?.password)))
+    throw new AppError(httpStatus.FORBIDDEN, 'PIN do not matched');
 
   if (amount < 50) {
     throw new AppError(
@@ -57,10 +64,18 @@ const sendMoney = async (
   return transaction;
 };
 
-const cashOut = async (userId: string, agentId: string, amount: number) => {
+const cashOut = async (
+  userId: string,
+  agentId: string,
+  amount: number,
+  pin: string,
+) => {
   const user = await User.findById(userId);
   const agent = await User.findById(agentId);
-  const admin = await User.findOne({ role: 'admin' });
+  const admin = await User.findOne({
+    role: 'admin',
+    phoneNumber: config.ADMIN_PHONE,
+  });
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -72,6 +87,9 @@ const cashOut = async (userId: string, agentId: string, amount: number) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Admin not found');
   }
 
+  if (!(await User.isPasswordMatched(pin, user?.password)))
+    throw new AppError(httpStatus.FORBIDDEN, 'PIN do not matched');
+
   const fee = amount * 0.015;
   const totalAmount = amount + fee;
 
@@ -80,7 +98,8 @@ const cashOut = async (userId: string, agentId: string, amount: number) => {
   }
 
   user.balance -= totalAmount;
-  agent.balance += amount * 0.01;
+  agent.balance -= amount; // Deduct the amount from the agent's balance
+  agent.income += amount * 0.01; // Agent earns 1% of the transaction amount
   admin.balance += amount * 0.005; // Admin earns 0.50% of the transaction amount
   admin.balance += 5; // Admin earns 5 taka for every transaction
 
@@ -100,10 +119,18 @@ const cashOut = async (userId: string, agentId: string, amount: number) => {
   return transaction;
 };
 
-const cashIn = async (userId: string, agentId: string, amount: number) => {
+const cashIn = async (
+  userId: string,
+  agentId: string,
+  amount: number,
+  pin: string,
+) => {
   const user = await User.findById(userId);
   const agent = await User.findById(agentId);
-  const admin = await User.findOne({ role: 'admin' });
+  const admin = await User.findOne({
+    role: 'admin',
+    phoneNumber: config.ADMIN_PHONE,
+  });
 
   if (!user || !agent) {
     throw new AppError(httpStatus.NOT_FOUND, 'User or Agent not found');
@@ -112,10 +139,15 @@ const cashIn = async (userId: string, agentId: string, amount: number) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Admin not found');
   }
 
+  if (!(await User.isPasswordMatched(pin, agent?.password)))
+    throw new AppError(httpStatus.FORBIDDEN, 'PIN do not matched');
+
   user.balance += amount;
+  agent.balance -= amount; // Deduct the amount from the agent's balance
   admin.balance += 5; // Admin earns 5 taka for every transaction
 
   await user.save();
+  await agent.save();
   await admin.save();
 
   const transaction = await Transaction.create({

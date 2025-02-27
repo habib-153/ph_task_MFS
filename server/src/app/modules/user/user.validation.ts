@@ -2,9 +2,9 @@ import { z } from "zod";
 import { USER_STATUS } from "./user.constant";
 
 const userValidationSchema = z.object({
-    password: z.string({
-        invalid_type_error:'Password must be a string'
-    }).max(20, {message:"password can not be more than 20 char"}).optional(),
+    password: z.number({
+        invalid_type_error:'PIN must be Digit'
+    }).max(5, {message:"password can not be more than or less than 5 digit"}).optional(),
 })
 
 const changeStatusValidationSchema = z.object({

@@ -19,6 +19,7 @@ export interface TUser {
   role: TUserRole;
   profileImg?: string;
   status: TUserStatus;
+  isApproved?: boolean;
   isDeleted: boolean;
 };
 
