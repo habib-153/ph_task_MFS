@@ -9,6 +9,13 @@ import { verifyToken } from "../utils/verifyToken";
 import { useState } from "react";
 import PHForm from "../components/form/PHForm";
 import PHInput from "../components/form/PHInput";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const loginSchema = z.object({
+  email: z.string().min(1, "Email or Mobile Number is required"),
+  password: z.string().length(5, "PIN must be exactly 5 digits"),
+});
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,8 +26,8 @@ const Login = () => {
   const handleDemoLogin = (role: "user" | "admin") => {
     const credentials =
       role === "user"
-        ? { email: "user@japan.com", password: "user123" }
-        : { email: "admin@japan.com", password: "admin123" };
+        ? { email: "user@gmail.com", password: "12312" }
+        : { email: "admin@gmail.com", password: "13579" };
     setDefaultValues(credentials);
   };
 
@@ -28,13 +35,13 @@ const Login = () => {
     const toastId = toast.loading("Logging in...");
     try {
       const res = await login(data);
-      console.log(res)
+
       if (res?.data?.error) {
         toast.error("Invalid credentials", { id: toastId });
       } else {
         const user = verifyToken(res?.data?.data?.accessToken);
         dispatch(setUser({ user: user, token: res?.data?.data?.accessToken }));
-        toast.success("Welcome to Japanese Learning!", { id: toastId });
+        toast.success("Welcome to Mobile Financial Service!", { id: toastId });
         navigate("/");
       }
     } catch (err) {
@@ -55,15 +62,21 @@ const Login = () => {
             initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
           >
-            Learn Japanese
-            <span className="block text-lg text-gray-600">
-              Your Gateway to Japanese Language
-            </span>
+            Mobile Financial Service
+            <span className="block text-lg text-gray-600">Secure Login</span>
           </motion.h1>
 
-          <PHForm onSubmit={onSubmit} defaultValues={defaultValues}>
-            <PHInput type="email" name="email" label="Email Address" />
-            <PHInput name="password" type="password" label="Password" />
+          <PHForm
+            onSubmit={onSubmit}
+            defaultValues={defaultValues}
+            resolver={zodResolver(loginSchema)}
+          >
+            <PHInput
+              type="text"
+              name="email"
+              label="Email"
+            />
+            <PHInput name="password" type="password" label="PIN" />
 
             <motion.button
               whileHover={{ scale: 1.05 }}
