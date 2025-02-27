@@ -11,6 +11,7 @@ import PHForm from "../components/form/PHForm";
 import PHInput from "../components/form/PHInput";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email or Mobile Number is required"),
@@ -23,10 +24,11 @@ const Login = () => {
   const [login] = useLoginMutation();
   const [defaultValues, setDefaultValues] = useState({});
 
-  const handleDemoLogin = (role: "user" | "admin") => {
+  const handleDemoLogin = (role: "user" | "admin" | "agent") => {
     const credentials =
       role === "user"
-        ? { email: "user@gmail.com", password: "12312" }
+        ? { email: "user@gmail.com", password: "12121" } : role === "agent"
+        ? { email: "", password: "" }
         : { email: "admin@gmail.com", password: "13579" };
     setDefaultValues(credentials);
   };
@@ -50,15 +52,22 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen flex">
+      <div className="w-1/2 flex items-center justify-center">
+        <DotLottieReact
+          src="https://lottie.host/14cc3b66-2423-4fb0-959c-616480847b9b/pxswadTAdv.lottie"
+          loop
+          autoplay
+        />
+      </div>
+      <div className="w-1/2 bg-white flex items-center justify-center">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-md mx-auto bg-white rounded-lg shadow-xl p-8"
+          className="max-w-md w-full p-8"
         >
           <motion.h1
-            className="text-3xl font-bold text-center mb-6 text-red-600"
+            className="text-3xl font-bold text-center mb-6 text-blue-600"
             initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
           >
@@ -71,17 +80,13 @@ const Login = () => {
             defaultValues={defaultValues}
             resolver={zodResolver(loginSchema)}
           >
-            <PHInput
-              type="text"
-              name="email"
-              label="Email"
-            />
+            <PHInput type="text" name="email" label="Email" />
             <PHInput name="password" type="password" label="PIN" />
 
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
+              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
               type="submit"
             >
               Login
@@ -92,14 +97,21 @@ const Login = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               onClick={() => handleDemoLogin("user")}
-              className="w-full py-2 border-2 border-red-200 rounded-md text-red-500"
+              className="w-full py-2 border-2 border-blue-200 rounded-md text-blue-500"
             >
               Try Demo User Account
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02 }}
+              onClick={() => handleDemoLogin("agent")}
+              className="w-full py-2 border-2 border-blue-200 rounded-md text-blue-600"
+            >
+              Try Demo Agent Account
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
               onClick={() => handleDemoLogin("admin")}
-              className="w-full py-2 border-2 border-red-200 rounded-md text-red-500"
+              className="w-full py-2 border-2 border-blue-200 rounded-md text-blue-500"
             >
               Try Demo Admin Account
             </motion.button>
@@ -109,7 +121,7 @@ const Login = () => {
             className="mt-6 text-center text-gray-600"
             whileHover={{ scale: 1.05 }}
           >
-            <Link to="/register" className="text-red-500 hover:underline">
+            <Link to="/register" className="text-blue-500 hover:underline">
               Create New Account
             </Link>
           </motion.div>
