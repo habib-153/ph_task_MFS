@@ -12,5 +12,6 @@ router.post(
 );
 router.post('/cash-out', auth(USER_ROLE.user, USER_ROLE.agent, USER_ROLE.admin), TransactionControllers.cashOut);
 router.post('/cash-in', auth(USER_ROLE.agent, USER_ROLE.admin), TransactionControllers.cashIn);
+router.get('/my-transactions', auth(USER_ROLE.user, USER_ROLE.agent, USER_ROLE.admin), TransactionControllers.getMyTransactions);
 
 export const TransactionRoutes = router;

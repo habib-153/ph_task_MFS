@@ -162,8 +162,14 @@ const cashIn = async (
   return transaction;
 };
 
+const getMyTransactions = async (userId: string) => {
+  const transactions = await Transaction.find({ senderId: userId, receiverId: userId });
+  return transactions;    
+}
+
 export const TransactionServices = {
   sendMoney,
   cashOut,
   cashIn,
+  getMyTransactions,
 };

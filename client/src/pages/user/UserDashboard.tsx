@@ -2,16 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  FaEye,
-  FaEyeSlash,
   FaPaperPlane,
   FaMoneyBillWave,
   FaHistory,
-  FaUser,
 } from "react-icons/fa";
-import { useGetMeQuery } from "../redux/features/user/userApi";
-import { useGetMyTransactionsQuery } from "../redux/features/transaction/transactionApi";
-import Loading from "../components/ui/Loading";
+import { useGetMeQuery, useGetMyTransactionsQuery } from "../../redux/features/transaction/transactionApi";
+import { Spin } from "antd";
+import { TTransaction } from "../../types/userManagement.type";
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -22,7 +20,7 @@ const Dashboard = () => {
     useGetMyTransactionsQuery(undefined);
 
   if (userLoading || transactionsLoading) {
-    return <Loading />;
+    return <Spin style={{width: '100%', alignItems: 'center', justifyContent: 'center' }}/>;
   }
 
   const recentTransactions = transactionsData?.data?.slice(0, 5) || [];
@@ -39,20 +37,20 @@ const Dashboard = () => {
         >
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-700">
-              Your Balance
+              Current Balance
             </h2>
-            <button
-              onClick={() => setIsBalanceVisible(!isBalanceVisible)}
-              className="text-blue-500 focus:outline-none"
-            >
-              {isBalanceVisible ? <FaEyeSlash /> : <FaEye />}
-            </button>
+            
           </div>
-          <div className="flex items-center">
-            <span className="text-3xl font-bold text-blue-600">
-              {isBalanceVisible
-                ? `৳ ${userData?.data?.balance || 0}`
-                : "••••••"}
+          <div
+            onClick={() => setIsBalanceVisible(!isBalanceVisible)}
+            className="flex items-center cursor-pointer"
+          >
+            <span
+              className={`text-3xl font-bold text-blue-600 ${
+                !isBalanceVisible ? "blur-md select-none" : ""
+              }`}
+            >
+              ৳ {userData?.data?.balance || 0}
             </span>
           </div>
           <p className="text-sm text-gray-500 mt-2">
@@ -74,7 +72,7 @@ const Dashboard = () => {
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => navigate("/send-money")}
+              onClick={() => navigate("/user/send-money")}
               className="flex flex-col items-center justify-center bg-blue-50 hover:bg-blue-100 p-4 rounded-lg"
             >
               <FaPaperPlane className="text-blue-500 text-2xl mb-2" />
@@ -84,7 +82,7 @@ const Dashboard = () => {
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => navigate("/cash-out")}
+              onClick={() => navigate("/user/cash-out")}
               className="flex flex-col items-center justify-center bg-green-50 hover:bg-green-100 p-4 rounded-lg"
             >
               <FaMoneyBillWave className="text-green-500 text-2xl mb-2" />
@@ -94,21 +92,11 @@ const Dashboard = () => {
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => navigate("/transactions")}
+              onClick={() => navigate("/user/transactions")}
               className="flex flex-col items-center justify-center bg-purple-50 hover:bg-purple-100 p-4 rounded-lg"
             >
               <FaHistory className="text-purple-500 text-2xl mb-2" />
               <span className="text-gray-700">History</span>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => navigate("/profile")}
-              className="flex flex-col items-center justify-center bg-yellow-50 hover:bg-yellow-100 p-4 rounded-lg"
-            >
-              <FaUser className="text-yellow-500 text-2xl mb-2" />
-              <span className="text-gray-700">Profile</span>
             </motion.button>
           </div>
         </motion.div>
@@ -153,7 +141,7 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {recentTransactions.map((transaction) => (
+                {recentTransactions.map((transaction: TTransaction) => (
                   <tr
                     key={transaction._id}
                     className="border-b border-gray-200 hover:bg-gray-50"

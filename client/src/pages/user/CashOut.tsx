@@ -4,44 +4,45 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSendMoneyMutation } from "../../redux/features/transaction/transactionApi";
+import { useCashOutMutation } from "../../redux/features/transaction/transactionApi";
 import PHForm from "../../components/form/PHForm";
 import PHInput from "../../components/form/PHInput";
 
-const sendMoneySchema = z.object({
-  receiverPhone: z.string().min(11, "Valid phone number is required"),
-  amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) >= 50, {
-    message: "Amount must be at least 50 taka",
+
+const cashOutSchema = z.object({
+  agentPhone: z.string().min(11, "Valid agent phone number is required"),
+  amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: "Amount must be greater than 0",
   }),
   pin: z.string().length(5, "PIN must be exactly 5 digits"),
 });
 
-const SendMoney = () => {
+const CashOut = () => {
   const navigate = useNavigate();
-  const [sendMoney, { isLoading }] = useSendMoneyMutation();
-  const [fee, setFee] = useState(0);
+  const [cashOut, { isLoading }] = useCashOutMutation();
+  const [amount, setAmount] = useState(0);
+  const fee = amount * 0.015;
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = Number(e.target.value);
-    setFee(amount > 100 ? 5 : 0);
+    setAmount(Number(e.target.value));
   };
 
   const onSubmit = async (data: any) => {
     const payload = {
-      receiverPhone: data.receiverPhone,
+      agentPhone: data.agentPhone,
       amount: Number(data.amount),
       pin: data.pin,
     };
 
     const toastId = toast.loading("Processing transaction...");
     try {
-      const result = await sendMoney(payload).unwrap();
-      toast.success("Money sent successfully!", { id: toastId });
+      const result = await cashOut(payload).unwrap();
+      toast.success("Cash out successful!", { id: toastId });
       navigate("/dashboard", {
         state: { transactionSuccess: true, details: result.data },
       });
     } catch (error) {
-      toast.error("Failed to send money. Please check your details.", {
+      toast.error("Failed to cash out. Please check your details.", {
         id: toastId,
       });
     }
@@ -54,15 +55,15 @@ const SendMoney = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h2 className="text-2xl font-semibold text-center text-blue-600 mb-6">
-          Send Money
+        <h2 className="text-2xl font-semibold text-center text-green-600 mb-6">
+          Cash Out
         </h2>
 
-        <PHForm onSubmit={onSubmit} resolver={zodResolver(sendMoneySchema)}>
+        <PHForm onSubmit={onSubmit} resolver={zodResolver(cashOutSchema)}>
           <PHInput
             type="text"
-            name="receiverPhone"
-            label="Recipient's Phone Number"
+            name="agentPhone"
+            label="Agent's Phone Number"
             placeholder="e.g. 01712345678"
           />
 
@@ -70,41 +71,40 @@ const SendMoney = () => {
             name="amount"
             label="Amount (Taka)"
             type="number"
-            placeholder="e.g. 100"
+            placeholder="Enter amount"
             onChangeFn={handleAmountChange}
           />
 
-          {fee > 0 && (
-            <div className="mb-4 p-3 bg-blue-50 rounded-md">
+          {amount > 0 && (
+            <div className="mb-4 p-3 bg-green-50 rounded-md">
               <p className="text-sm text-gray-600">
-                Transaction Fee: <span className="font-semibold">৳{fee}</span>
+                Cash Out Fee (1.5%):{" "}
+                <span className="font-semibold">৳{fee.toFixed(2)}</span>
               </p>
               <p className="text-sm text-gray-600">
                 Total Amount:{" "}
                 <span className="font-semibold">
-                  ৳
-                  {Number(
-                    (
-                      document.querySelector(
-                        'input[name="amount"]'
-                      ) as HTMLInputElement
-                    )?.value || 0
-                  ) + fee}
+                  ৳{(amount + fee).toFixed(2)}
                 </span>
               </p>
             </div>
           )}
 
-          <PHInput name="pin" label="PIN" type="password" />
+          <PHInput
+            name="pin"
+            label="PIN"
+            type="password"
+            placeholder="Enter your 5-digit PIN"
+          />
 
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 disabled:bg-blue-300"
+            className="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-600 disabled:bg-green-300"
           >
-            {isLoading ? "Processing..." : "Send Money"}
+            {isLoading ? "Processing..." : "Cash Out"}
           </motion.button>
         </PHForm>
 
@@ -113,11 +113,9 @@ const SendMoney = () => {
             Please Note:
           </h3>
           <ul className="list-disc list-inside text-sm text-gray-600">
-            <li>Minimum amount to send is 50 taka</li>
-            <li>
-              A fee of 5 taka will be charged for transactions over 100 taka
-            </li>
-            <li>Please verify recipient's phone number before sending</li>
+            <li>A fee of 1.5% will be charged for cash-out transactions</li>
+            <li>Please verify agent's phone number before proceeding</li>
+            <li>Only approved agents can process cash-out transactions</li>
           </ul>
         </div>
       </motion.div>
@@ -125,4 +123,4 @@ const SendMoney = () => {
   );
 };
 
-export default SendMoney;
+export default CashOut;

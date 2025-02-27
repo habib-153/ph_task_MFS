@@ -4,6 +4,17 @@ import { TransactionServices } from "./transaction.service";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 
+const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  const transactions = await TransactionServices.getMyTransactions(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'My transactions',
+    data: transactions,
+  });
+});
 const sendMoney = catchAsync(async (req: Request, res: Response) => {
   const { senderId, receiverPhone, amount, pin } = req.body;
   const result = await TransactionServices.sendMoney(
@@ -49,4 +60,5 @@ export const TransactionControllers = {
   sendMoney,
   cashOut,
   cashIn,
+  getMyTransactions,
 };

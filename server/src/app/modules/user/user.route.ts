@@ -14,7 +14,7 @@ router.post(
   UserControllers.changeStatus,
 );
 
-router.get('/me', auth('admin', 'user'), UserControllers.getMe);
+router.get('/me', auth('admin', 'user', 'agent'), UserControllers.getMe);
 
 router.get('/', auth('admin'), UserControllers.getAllUsers);
 
