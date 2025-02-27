@@ -4,9 +4,9 @@ exports.userValidation = void 0;
 const zod_1 = require("zod");
 const user_constant_1 = require("./user.constant");
 const userValidationSchema = zod_1.z.object({
-    password: zod_1.z.string({
-        invalid_type_error: 'Password must be a string'
-    }).max(20, { message: "password can not be more than 20 char" }).optional(),
+    password: zod_1.z.number({
+        invalid_type_error: 'PIN must be Digit'
+    }).max(5, { message: "password can not be more than or less than 5 digit" }).optional(),
 });
 const changeStatusValidationSchema = zod_1.z.object({
     body: zod_1.z.object({

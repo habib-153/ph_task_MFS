@@ -99,8 +99,8 @@ const cashOut = async (
 
   user.balance -= totalAmount;
   agent.balance -= amount; // Deduct the amount from the agent's balance
-  agent.income += amount * 0.01; // Agent earns 1% of the transaction amount
-  admin.balance += amount * 0.005; // Admin earns 0.50% of the transaction amount
+  agent.income = (agent.income || 0) + amount * 0.01; // Agent earns 1% of the transaction amount
+  admin.income = (admin.income || 0) + amount * 0.005; // Admin earns 0.50% of the transaction amount
   admin.balance += 5; // Admin earns 5 taka for every transaction
 
   await user.save();

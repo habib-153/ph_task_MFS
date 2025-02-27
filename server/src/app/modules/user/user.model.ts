@@ -19,6 +19,9 @@ const userSchema = new Schema<TUser, IUserModel>(
       type: Number,
       default: 0,
     },
+    income: {
+      type: Number,
+    },
     name: {
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },

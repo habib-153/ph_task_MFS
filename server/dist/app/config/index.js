@@ -20,4 +20,5 @@ exports.default = {
     cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
     cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
     RESET_PASS_UI_LINK: process.env.RESET_PASS_UI_LINK,
+    ADMIN_PHONE: process.env.ADMIN_PHONE,
 };

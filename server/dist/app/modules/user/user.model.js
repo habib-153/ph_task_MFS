@@ -31,6 +31,9 @@ const userSchema = new mongoose_1.Schema({
         type: Number,
         default: 0,
     },
+    income: {
+        type: Number,
+    },
     name: {
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
@@ -80,6 +83,10 @@ const userSchema = new mongoose_1.Schema({
         enum: user_constant_1.USER_STATUS,
     },
     isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    isApproved: {
         type: Boolean,
         default: false,
     },

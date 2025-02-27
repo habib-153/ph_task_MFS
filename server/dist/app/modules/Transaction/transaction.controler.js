@@ -12,53 +12,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminControllers = void 0;
+exports.TransactionControllers = void 0;
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
-const admin_service_1 = require("./admin.service");
+const transaction_service_1 = require("./transaction.service");
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
-const approveAgent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { agentId } = req.params;
-    const result = yield admin_service_1.AdminServices.approveAgent(agentId);
+const sendMoney = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { senderId, receiverPhone, amount, pin } = req.body;
+    const result = yield transaction_service_1.TransactionServices.sendMoney(senderId, receiverPhone, amount, pin);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Agent approved successfully',
+        message: 'Money sent successfully',
         data: result,
     });
 }));
-const blockUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.params;
-    const result = yield admin_service_1.AdminServices.blockUser(userId);
+const cashOut = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, agentId, amount, pin } = req.body;
+    const result = yield transaction_service_1.TransactionServices.cashOut(userId, agentId, amount, pin);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'User blocked successfully',
+        message: 'Cash out successful',
         data: result,
     });
 }));
-const addMoneyToAgent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { agentId, amount } = req.body;
-    const result = yield admin_service_1.AdminServices.addMoneyToAgent(agentId, amount);
+const cashIn = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, agentId, amount, pin } = req.body;
+    const result = yield transaction_service_1.TransactionServices.cashIn(userId, agentId, amount, pin);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Money added to agent successfully',
+        message: 'Cash in successful',
         data: result,
     });
 }));
-const getTotalMoneyInSystem = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield admin_service_1.AdminServices.getTotalMoneyInSystem();
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
-        success: true,
-        message: 'Total money in the system retrieved successfully',
-        data: result,
-    });
-}));
-exports.AdminControllers = {
-    approveAgent,
-    blockUser,
-    addMoneyToAgent,
-    getTotalMoneyInSystem,
+exports.TransactionControllers = {
+    sendMoney,
+    cashOut,
+    cashIn,
 };

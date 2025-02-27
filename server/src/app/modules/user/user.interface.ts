@@ -15,6 +15,7 @@ export interface TUser {
   phoneNumber: string;
   nid: string;
   balance: number;
+  income?: number;
   passwordChangedAt?: Date;
   role: TUserRole;
   profileImg?: string;
