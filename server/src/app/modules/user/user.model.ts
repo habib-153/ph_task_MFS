@@ -30,7 +30,7 @@ const userSchema = new Schema<TUser, IUserModel>(
       type: String,
       required: true,
       unique: true,
-      select: false,
+      //select: false,
     },
     accountType: {
       type: String,

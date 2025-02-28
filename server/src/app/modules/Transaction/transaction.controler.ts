@@ -5,8 +5,8 @@ import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 
 const getMyTransactions = catchAsync(async (req: Request, res: Response) => {
-  const { userId } = req.user;
-  const transactions = await TransactionServices.getMyTransactions(userId);
+  const { _id } = req.user;
+  const transactions = await TransactionServices.getMyTransactions(_id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

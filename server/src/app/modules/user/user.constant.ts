@@ -9,6 +9,7 @@ export type TUserRole = keyof typeof USER_ROLE
 export const AC_TYPE = {
   Agent: 'Agent',
   User: 'User',
+    Admin: 'Admin'
 } as const;
 
 export type TAcType = keyof typeof AC_TYPE;

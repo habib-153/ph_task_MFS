@@ -34,7 +34,7 @@ const sendMoney = (senderId, receiverPhone, amount, pin) => __awaiter(void 0, vo
     if (!admin) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Admin not found');
     }
-    if (!(yield user_model_1.User.isPasswordMatched(pin, sender === null || sender === void 0 ? void 0 : sender.password)))
+    if (!(yield user_model_1.User.isPasswordMatched(pin.toString(), sender.password)))
         throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'PIN do not matched');
     if (amount < 50) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Minimum amount to send is 50 taka');
@@ -133,7 +133,7 @@ const cashIn = (userId, agentId, amount, pin) => __awaiter(void 0, void 0, void 
     return transaction;
 });
 const getMyTransactions = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const transactions = yield transaction_model_1.Transaction.find({ senderId: userId, receiverId: userId });
+    const transactions = yield transaction_model_1.Transaction.find({ $or: [{ senderId: userId }, { receiverId: userId }] }).sort({ createdAt: -1 });
     return transactions;
 });
 exports.TransactionServices = {

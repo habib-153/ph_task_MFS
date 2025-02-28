@@ -9,6 +9,7 @@ exports.USER_ROLE = {
 exports.AC_TYPE = {
     Agent: 'Agent',
     User: 'User',
+    Admin: 'Admin'
 };
 exports.DEFAULT_PROFILE_URL = 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Free-Download.png';
 exports.USER_STATUS = {

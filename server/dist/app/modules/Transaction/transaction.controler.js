@@ -18,8 +18,8 @@ const transaction_service_1 = require("./transaction.service");
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
 const getMyTransactions = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.user;
-    const transactions = yield transaction_service_1.TransactionServices.getMyTransactions(userId);
+    const { _id } = req.user;
+    const transactions = yield transaction_service_1.TransactionServices.getMyTransactions(_id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

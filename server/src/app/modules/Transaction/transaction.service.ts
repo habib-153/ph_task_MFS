@@ -27,7 +27,7 @@ const sendMoney = async (
     throw new AppError(httpStatus.NOT_FOUND, 'Admin not found');
   }
 
-  if (!(await User.isPasswordMatched(pin, sender?.password)))
+  if (!(await User.isPasswordMatched(pin.toString(), sender.password)))
     throw new AppError(httpStatus.FORBIDDEN, 'PIN do not matched');
 
   if (amount < 50) {
@@ -163,7 +163,7 @@ const cashIn = async (
 };
 
 const getMyTransactions = async (userId: string) => {
-  const transactions = await Transaction.find({ senderId: userId, receiverId: userId });
+  const transactions = await Transaction.find({ $or: [{ senderId: userId }, { receiverId: userId }] }).sort({ createdAt: -1 });
   return transactions;    
 }
 
